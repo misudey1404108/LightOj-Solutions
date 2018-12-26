@@ -1,0 +1,118 @@
+///......................................///
+///......... Name : Misu Dey  ...........///
+///......... University: CUET ...........///
+///......... Id : 1404108     ...........///
+///......................................///
+
+#include<bits/stdc++.h>
+#define ll long long
+#define pb push_back
+#define fr(i,a,b) for(int i=a;i<=b;i++)
+#define re_fr(i,a,b) for(int i=a;i>=b;i--)
+#define frl(i,a,b) for(ll i=a;i<=b;i++)
+#define re_frl(i,a,b) for(ll i=a;i>=b;i--)
+#define mp make_pair
+#define F first
+#define S second
+#define MX 5000010
+#define eps 1e-9
+#define PI acos(-1)
+#define inf 1e18
+#define pll pair<ll,ll>
+#define mod 1000000007
+#define mod2 998244353
+#define gcd(a,b) __gcd(a,b)
+#define lcm(a,b) (a*(b/gcd(a,b)))
+#define PI acos(-1)
+#define fast() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+/// lower bound for sorted array
+/// ll lb = lower_bound( b, b+n, 100 ) - b;
+
+vector<pll>V[30010];
+ll vis[30010];
+ll s_to_d[30010],d_to_s[30010],emne_dist[30010];
+ll des=-1,mx=0;
+vector<ll>tmp;
+void dfs1(ll node)
+{
+    vis[node]=1;
+    tmp.pb(node);
+    for(ll j=0;j<V[node].size();j++)
+    {
+        pll vp=V[node][j];
+        if(!vis[vp.F])
+        {
+            emne_dist[vp.F]=emne_dist[node]+vp.S;
+            dfs1(vp.F);
+        }
+    }
+    if(emne_dist[node]>mx)
+    {
+        mx=emne_dist[node];
+        des=node;
+    }
+}
+void dfs2(ll node)
+{
+    vis[node]=1;
+    //tmp.pb(node);
+    for(ll j=0;j<V[node].size();j++)
+    {
+        pll vp=V[node][j];
+        if(!vis[vp.F])
+        {
+            d_to_s[vp.F]=d_to_s[node]+vp.S;
+            dfs2(vp.F);
+        }
+    }
+    if(d_to_s[node]>mx) mx=d_to_s[node], des=node;
+}
+void find_diameter(ll node)
+{
+   mx=0;
+   des=-1;
+   emne_dist[node]=0;
+   dfs1(node);
+
+   for(ll j=0;j<tmp.size();j++) vis[tmp[j]]=0;
+   mx=0;
+   d_to_s[des]=0;
+   dfs2(des);
+   //cout<<mx<<endl;
+
+}
+int main()
+{
+    fast();
+    ll t; scanf("%lld",&t);
+    for(ll cs=1;cs<=t;cs++)
+    {
+        ll n; scanf("%lld",&n);
+        for(ll i=0;i<n;i++)
+        {
+            vis[i]=0; emne_dist[i]=0;
+            d_to_s[i]=0; s_to_d[i]=0;
+            V[i].clear();
+        }
+        for(ll i=1;i<n;i++)
+        {
+            ll u,v,w;
+            scanf("%lld %lld %lld",&u,&v,&w);
+            V[u].pb( mp(v,w) );
+            V[v].pb( mp(u,w) );
+        }
+        find_diameter(0);
+
+        printf("Case %lld: %lld\n",cs,mx);
+
+
+        tmp.clear();
+
+    }
+
+
+
+
+}
+
